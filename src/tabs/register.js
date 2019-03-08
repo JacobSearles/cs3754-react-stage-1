@@ -5,10 +5,10 @@ import UserForm from './forms/userinformation';
 
 const RegisterTab = ({ showSpinner, updateUser }) => {
   // an user message to be displayed, if any
-  const [ message, updateMessage ] = useState(null);
+  const [message, updateMessage] = useState(null);
 
   // handle user registeration
-  const addNewUser = async (values) => {
+  const addNewUser = async values => {
     updateMessage(null);
     showSpinner(true);
     let res = await makeAPICall('POST', '/api/users', values);
@@ -19,16 +19,17 @@ const RegisterTab = ({ showSpinner, updateUser }) => {
       updateUser(body.user);
       localStorage.token = body.token;
     }
-  }
+  };
   return (
     <>
       <h3>Register a new user</h3>
-      <UserForm onSubmit={(values) => addNewUser(values)} message={message} />
-    </>);
+      <UserForm onSubmit={values => addNewUser(values)} message={message} />
+    </>
+  );
 };
 
 RegisterTab.propTypes = {
   updateUser: PropTypes.func.isRequired
-}
+};
 
 export default RegisterTab;

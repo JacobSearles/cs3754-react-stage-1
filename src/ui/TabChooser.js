@@ -20,13 +20,15 @@ const TabChooser = ({ children }) => {
           </li>
         ))}
       </ul>
-      <div className={`tab ${currentTabSpinning ? "spinner" : ""}`}>
+      <div className={`tab ${currentTabSpinning ? 'spinner' : ''}`}>
         {/* Since the element is already created when passed as a child, we
             can't just add a property.  React.cloneElement allows us to add
             a property 'showSpinner' that allows the embedded tab component
             to turn the spinner off and on.
          */}
-        {React.cloneElement(selectedTab, { showSpinner: makeCurrentTabSpinning })}
+        {React.cloneElement(selectedTab, {
+          showSpinner: makeCurrentTabSpinning
+        })}
       </div>
     </>
   );
