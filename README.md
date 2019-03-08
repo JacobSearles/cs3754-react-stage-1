@@ -8,8 +8,6 @@ The learning goal is to get started with React by examining, building, and
 combining React components.  You will also become familiar with its associated 
 toolchain including create-react-app and webpack.
 
-This assignment will be rolled out in 2 steps.  This document describes step 1.
-
 Preparation:
 -------------
 
@@ -30,8 +28,8 @@ The package.json contains a entry to facilitate [proxying API requests during
 development](https://facebook.github.io/create-react-app/docs/proxying-api-requests-in-development)
 which is pointing at `http://localhost:3000` 
 
-Requirements for Step 1:
-------------------------
+Requirements
+------------
 
 The partial application provided in this repository provides 2 tabs and one form
 to register a new user.  You should add the following:
@@ -43,7 +41,7 @@ to register a new user.  You should add the following:
 - a tab to list all users (if the user is currently logged in as an administrator).
   You can use a "refresh" button to retrieve the current list. 
 
-- all tabs should have proper error handling for when the API call fails that inform
+- all tabs should have proper error handling for when the API call fails that informs
   the user of the error that occurred.
 
 - a spinner that spins while an API request is in progress.
