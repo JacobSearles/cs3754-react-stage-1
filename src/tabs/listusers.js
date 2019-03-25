@@ -4,6 +4,7 @@ import { makeAPICall } from '../api';
 
 const UsersTab = ({ showSpinner }) => {
   const getUsers = async tableData => {
+    this.preventDefault();
     showSpinner(true);
     let res = await makeAPICall('GET', '/api/users');
     let rbody = await res.json();
