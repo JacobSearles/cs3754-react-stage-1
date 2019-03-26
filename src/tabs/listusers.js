@@ -2,20 +2,79 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { makeAPICall } from '../api';
 
+/*class UsersTab extends Component {
+  constructor() {
+    super();
+    this.state = { res: null, tableData: null };
+  }
+
+  componentDidMount() {
+    this.props.showSpinner(true);
+    makeAPICall('GET', '/api/users')
+      .then(res => {
+        this.setState({ res: res });
+        return res.json();
+      })
+      .then(body => {
+        this.setState({ tableData: body });
+      });
+    this.props.showSpinner(false);
+  }
+
+  render() {
+    const { tableData } = this.state;
+
+    return tableData.users.map(user => (
+      <tr key={user.id}>
+        <td>{user.id}</td>
+        <td>{user.name}</td>
+        <td>{user.fullname}</td>
+        <td>{user.admin ? 'yes' : 'no'}</td>
+      </tr>
+    ));
+  }
+}*/
+let rbody = undefined;
 const UsersTab = ({ showSpinner }) => {
-  const getUsers = async tableData => {
-    this.preventDefault();
+  const getUsers = async () => {
     showSpinner(true);
-    let res = await makeAPICall('GET', '/api/users');
-    let rbody = await res.json();
-    alert(rbody.users[0].name);
-    for (var i = rbody.users.length - 1; i >= 0; i--) {
-      tableData.push(<td>{rbody.users[i].id}</td>);
-      tableData.push(<td>{rbody.users[i].name}</td>);
-      tableData.push(<td>{rbody.users[i].fullname}</td>);
-      tableData.push(<td>{rbody.users[i].admin ? 'yes' : 'no'}</td>);
-    }
+    let res = await makeAPICall('GET', '/api/users', undefined);
+    rbody = await res.json();
     showSpinner(false);
+  };
+
+  const makeTable = () => {
+    //getUsers();
+    if (rbody !== undefined && rbody.hasOwnProperty('users')) {
+      const tableRows = rbody.users.map(user => (
+        <tr key={user.id}>
+          <td>{user.id}</td>
+          <td>{user.name}</td>
+          <td>{user.fullname}</td>
+          <td>{user.admin ? 'yes' : 'no'}</td>
+        </tr>
+      ));
+
+      return (
+        <tbody>
+          <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Fullname</th>
+            <th>Admin</th>
+          </tr>
+          {tableRows}
+        </tbody>
+      );
+    } else {
+      return (
+        <tbody>
+          <tr>
+            <th>You do not have permission</th>
+          </tr>
+        </tbody>
+      );
+    }
   };
 
   let tableData = [];
@@ -24,9 +83,17 @@ const UsersTab = ({ showSpinner }) => {
   tableData.push(<th>Fullname</th>);
   tableData.push(<th>Admin</th>);
 
-  getUsers(tableData);
+  //getUsers(tableData);
 
-  return <table>{tableData}</table>;
+  return (
+    <>
+      <h3>List Users</h3>
+      <button type="button" onClick={() => getUsers(tableData)}>
+        Refresh
+      </button>
+      <table>{makeTable()}</table>
+    </>
+  );
 };
 
 export default UsersTab;

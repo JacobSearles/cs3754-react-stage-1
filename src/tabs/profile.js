@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 const ProfileTab = ({ currentUser }) => {
   if (currentUser) {
-    alert('asdf');
     return (
       <>
         <h3>Profile</h3>
