@@ -2,38 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { makeAPICall } from '../api';
 
-/*class UsersTab extends Component {
-  constructor() {
-    super();
-    this.state = { res: null, tableData: null };
-  }
-
-  componentDidMount() {
-    this.props.showSpinner(true);
-    makeAPICall('GET', '/api/users')
-      .then(res => {
-        this.setState({ res: res });
-        return res.json();
-      })
-      .then(body => {
-        this.setState({ tableData: body });
-      });
-    this.props.showSpinner(false);
-  }
-
-  render() {
-    const { tableData } = this.state;
-
-    return tableData.users.map(user => (
-      <tr key={user.id}>
-        <td>{user.id}</td>
-        <td>{user.name}</td>
-        <td>{user.fullname}</td>
-        <td>{user.admin ? 'yes' : 'no'}</td>
-      </tr>
-    ));
-  }
-}*/
 let rbody = undefined;
 const UsersTab = ({ showSpinner }) => {
   const getUsers = async () => {
