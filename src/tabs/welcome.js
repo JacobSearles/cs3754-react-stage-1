@@ -1,11 +1,14 @@
 import React from 'react';
+import Typography from '@material-ui/core/Typography';
 
 export default () => (
   <>
-    <h3>Welcome</h3>
-    <div>
+    <Typography variant="h3" align="center" gutterBottom>
+      Welcome
+    </Typography>
+    <Typography>
       Click on a tab. You should implement the "Login" tab, the "Profile" tab,
       and the "List Users" tab.
-    </div>
+    </Typography>
   </>
 );

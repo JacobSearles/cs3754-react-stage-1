@@ -27,7 +27,7 @@ const ProfileTab = ({ currentUser }) => {
 };
 
 ProfileTab.propTypes = {
-  updateUser: PropTypes.func.isRequired
+  currentUser: PropTypes.object
 };
 
 export default ProfileTab;

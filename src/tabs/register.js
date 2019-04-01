@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeAPICall } from '../api';
 import UserForm from './forms/userinformation';
+import Typography from '@material-ui/core/Typography';
 
-const RegisterTab = ({ showSpinner, updateUser }) => {
+const RegisterTab = ({ updateUser }) => {
   // an user message to be displayed, if any
   const [message, updateMessage] = useState(null);
+  let [inProgress, setInProgress] = useState(false);
 
   // handle user registeration
   const addNewUser = async values => {
     updateMessage(null);
-    showSpinner(true);
+    setInProgress(true);
     let res = await makeAPICall('POST', '/api/users', values);
     let body = await res.json();
-    showSpinner(false);
+    setInProgress(false);
     updateMessage(body.message);
     if (res.status === 200) {
       updateUser(body.user);
@@ -22,8 +24,14 @@ const RegisterTab = ({ showSpinner, updateUser }) => {
   };
   return (
     <>
-      <h3>Register a new user</h3>
-      <UserForm onSubmit={values => addNewUser(values)} message={message} />
+      <Typography align="center" variant="h5" gutterBottom>
+        Register a new user
+      </Typography>
+      <UserForm
+        onSubmit={values => addNewUser(values)}
+        message={message}
+        inProgress={inProgress}
+      />
     </>
   );
 };
