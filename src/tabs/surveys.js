@@ -26,8 +26,8 @@ const ListQuestionsTab = ({
   updateQuestions,
   currentQuestions
 }) => {
-  const [message, updateMessage] = useState(null);
-  const [inProgress, setInProgress] = useState(false);
+  const [updateMessage] = useState(null);
+  const [setInProgress] = useState(false);
   let [page, setPage] = useState(() => {
     const query = qsParse(location.search.substring(1));
     return Number(query.page) || 0;
@@ -57,10 +57,10 @@ const ListQuestionsTab = ({
     return page !== 0;
   };
 
-  const hasNextPage = () => {
+  /*const hasNextPage = () => {
     let num = currentQuestions.length / 6 + 1;
     return page < num;
-  };
+  };*/
 
   const gotoPage = page => {
     const pathname = history.location.pathname;
@@ -121,7 +121,7 @@ const ListQuestionsTab = ({
           >
             <KeyboardArrowRight fontSize="large" />
           </IconButton>
-        </TableFooter>*/
+        </TableFooter>
       </Table>
     </>
   );

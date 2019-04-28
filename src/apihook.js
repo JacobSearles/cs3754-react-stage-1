@@ -126,7 +126,7 @@ const useDataApi = (
           // Attempt at generic error handling.
           // Our goal is, for each error, to dispatch an error message suitable
           // for display to the user.
-          let payload = { }
+          let payload = {};
           if (error.response) {
             // Case 1: we can't reach the API server and instead obtain an error
             // response from an intermediate server (e.g. CRA development server)
@@ -142,7 +142,7 @@ const useDataApi = (
           } else {
             // no response, for instance, in the case of a network error.
             // axios usually puts a message on the error, such as "Network Error"
-            payload = { errorMessage: error.message || "unknown error"}
+            payload = { errorMessage: error.message || 'unknown error' };
           }
           dispatch({
             type: 'FETCH_FAILURE',

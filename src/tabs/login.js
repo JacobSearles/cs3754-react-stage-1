@@ -22,11 +22,7 @@ const LoginTab = ({ updateUser, currentUser, location, classes }) => {
     return <Redirect to={from} />;
   }
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  let { data, isLoading, isError, isOk, errorMessage, request } = useDataApi(
-    null,
-    null,
-    data => data.token
-  );
+  let { data, isOk } = useDataApi(null, null, data => data.token);
 
   // handle user registeration
   const login = async values => {
