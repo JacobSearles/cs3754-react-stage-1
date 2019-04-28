@@ -8,6 +8,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
+import { Link as RRLink } from 'react-router-dom';
 
 const styles = theme => ({
   centered: {
@@ -52,11 +53,11 @@ const LoginForm = ({ onSubmit, message, inProgress, classes }) => {
         <CardContent>
           <TextField
             type="text"
-            name="name"
+            name="username"
             label="Username"
             fullWidth
             margin="normal"
-            value={values.name}
+            value={values.username}
             onChange={handleChange}
           />
           <TextField

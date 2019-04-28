@@ -42,8 +42,10 @@ const UsersTab = ({ classes }) => {
       const tableRows = rbody.users.map(user => (
         <TableRow key={user.id}>
           <TableCell>{user.id}</TableCell>
-          <TableCell>{user.name}</TableCell>
-          <TableCell>{user.fullname}</TableCell>
+          <TableCell>{user.username}</TableCell>
+          <TableCell>{user.firstname}</TableCell>
+          <TableCell>{user.lastname}</TableCell>
+          <TableCell>{user.email}</TableCell>
           <TableCell>{user.admin ? 'yes' : 'no'}</TableCell>
         </TableRow>
       ));
@@ -54,7 +56,9 @@ const UsersTab = ({ classes }) => {
             <TableRow>
               <TableCell>Id</TableCell>
               <TableCell>Username</TableCell>
-              <TableCell>Fullname</TableCell>
+              <TableCell>Firstname</TableCell>
+              <TableCell>Lasstname</TableCell>
+              <TableCell>Email</TableCell>
               <TableCell>Admin</TableCell>
             </TableRow>
           </TableHead>
@@ -84,7 +88,7 @@ const UsersTab = ({ classes }) => {
         onClick={() => getUsers(tableData)}
         inProgress={inProgress}
       >
-        Refresh
+        Load
       </Button>
       {inProgress && <LinearProgress />}
       <Paper className={classes.root}>

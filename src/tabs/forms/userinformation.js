@@ -8,6 +8,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
+import { withFormik } from 'formik';
+import * as yup from 'yup';
 
 const styles = theme => ({
   centered: {
@@ -53,11 +55,11 @@ const UserForm = ({ onSubmit, message, inProgress, classes }) => {
         <CardContent>
           <TextField
             type="text"
-            name="name"
-            label="Usename"
+            name="username"
+            label="Username"
             fullWidth
             margin="normal"
-            value={values.name}
+            value={values.username}
             onChange={handleChange}
           />
           <TextField
@@ -71,11 +73,29 @@ const UserForm = ({ onSubmit, message, inProgress, classes }) => {
           />
           <TextField
             type="text"
-            name="fullname"
-            label="Full Name"
+            name="firstname"
+            label="First Name"
             fullWidth
             margin="normal"
-            value={values.fullname}
+            value={values.firstname}
+            onChange={handleChange}
+          />
+          <TextField
+            type="text"
+            name="lastname"
+            label="Last Name"
+            fullWidth
+            margin="normal"
+            value={values.lastname}
+            onChange={handleChange}
+          />
+          <TextField
+            type="text"
+            name="email"
+            label="Email"
+            fullWidth
+            margin="normal"
+            value={values.email}
             onChange={handleChange}
           />
           {inProgress && <LinearProgress />}
@@ -99,4 +119,33 @@ UserForm.propTypes = {
   inProgress: PropTypes.bool
 };
 
-export default withStyles(styles)(UserForm);
+export default withStyles(styles)(
+  withFormik({
+    enableReinitialize: true,
+    mapPropsToValues: props => ({
+      username: '',
+      password: '',
+      password2: '',
+      firstname: '',
+      lastname: '',
+      email: '',
+      ...props.currentUser
+    }),
+    validationSchema: yup.object().shape({
+      email: yup
+        .string()
+        .email('Invalid email address')
+        .required('Email is required!'),
+      password: yup
+        .mixed()
+        .test('match', 'Passwords do not match', function(password2) {
+          return password2 === this.options.parent.password2;
+        })
+    }),
+    handleSubmit: (values, { setSubmitting, props }) => {
+      props.onSubmit(values);
+      setSubmitting(false);
+    },
+    displayName: 'UserForm' // helps with React DevTools
+  })(UserForm)
+);

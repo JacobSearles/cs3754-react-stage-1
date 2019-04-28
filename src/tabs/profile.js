@@ -4,24 +4,10 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import CardContent from '@material-ui/core/CardContent';
 import Card from '@material-ui/core/Card';
-
-const styles = theme => ({
-  centered: {
-    margin: '0 auto', // https://learnlayout.com/max-width.html
-    maxWidth: 600
-  },
-  centerChildren: {
-    justifyContent: 'center'
-  },
-  root: {
-    ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2
-  }
-});
+import styles from '../styles';
 
 const ProfileTab = ({ currentUser, classes }) => {
-  if (currentUser) {
+  if (currentUser.authenticated) {
     return (
       <>
         <Typography align="center" variant="h5" gutterBottom>
@@ -31,11 +17,15 @@ const ProfileTab = ({ currentUser, classes }) => {
           <CardContent>
             <div className="twocols">
               <b>username: </b>
-              <div>{currentUser.name}</div>
+              <div>{currentUser.username}</div>
               <b>ID: </b>
               <div>{currentUser.id}</div>
-              <b>Full name: </b>
-              <div>{currentUser.fullname}</div>
+              <b>First name: </b>
+              <div>{currentUser.firstname}</div>
+              <b>Last name: </b>
+              <div>{currentUser.lastname}</div>
+              <b>Email: </b>
+              <div>{currentUser.email}</div>
             </div>
           </CardContent>
         </Card>

@@ -20,6 +20,7 @@ const RegisterTab = ({ updateUser }) => {
     if (res.status === 200) {
       updateUser(body.user);
       localStorage.token = body.token;
+      window.location.href = `${process.env.PUBLIC_URL}/`;
     }
   };
   return (

@@ -5,13 +5,18 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
+    "@material-ui/styles": "^3.0.0-alpha.10",
+    "axios": "^0.18.0",
     "eslint-plugin-react-hooks": "^1.4.0",
+    "formik": "^1.5.4",
     "prettier": "^1.16.4",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-router-config": "^5.0.0",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.5"
+    "react-scripts": "2.1.5",
+    "remarkable": "^1.7.1",
+    "yup": "^0.27.0"
   },
   "scripts": {
     "start": "react-scripts start",
