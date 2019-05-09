@@ -1,0 +1,10 @@
+Citations
+
+Name: Godmar Back
+Date accessed: 4/27/2019
+Date of code: 4/14/2019
+Title of program/source: React App
+code version: 1
+Type: source code
+Web address: https://godmar.cs.cloud.vt.edu/projects/ex9/
+Used some code for styling and other small things

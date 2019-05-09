@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeAPICall } from '../api';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
@@ -10,92 +10,124 @@ import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import { parse as qsParse } from 'querystring';
+import TableFooter from '@material-ui/core/TableHead';
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@material-ui/icons';
+import IconButton from '@material-ui/core/IconButton';
+import RequireAuthentication from '../ui/RequireAuthentication';
+import styles from '../styles';
 
-const styles = theme => ({
-  centered: {
-    margin: '0 auto', // https://learnlayout.com/max-width.html
-    maxWidth: 600
-  },
-  centerChildren: {
-    justifyContent: 'center'
-  },
-  root: {
-    ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2
-  }
-});
-
-let rbody = undefined;
-const UsersTab = ({ classes }) => {
+//let rbody = undefined;
+const UsersTab = ({
+  classes,
+  currentUsers,
+  updateUsers,
+  history,
+  location
+}) => {
   const [inProgress, setInProgress] = useState(false);
-  const getUsers = async () => {
-    setInProgress(true);
-    let res = await makeAPICall('GET', '/api/users', undefined);
-    rbody = await res.json();
-    setInProgress(false);
+  const [message, updateMessage] = useState(null);
+  let [page, setPage] = useState(() => {
+    const query = qsParse(location.search.substring(1));
+    return Number(query.page) || 0;
+  });
+
+  useEffect(() => {
+    const showUsers = async () => {
+      updateMessage(null);
+      setInProgress(true);
+      const query = qsParse(location.search.substring(1));
+      const page = Number(query.page) || 0;
+      setPage(page);
+      let res = await makeAPICall('GET', `/api/users/?page=${page}`);
+      let body = await res.json();
+      setInProgress(false);
+      updateMessage(body.message);
+      console.log(history);
+      if (res.status === 200) {
+        updateUsers(body.list);
+      } else {
+        console.log(body);
+      }
+    };
+    showUsers();
+  }, [location]);
+
+  const hasPrevPage = () => {
+    return page !== 0;
   };
 
-  const makeTable = () => {
-    //getUsers();
-    if (rbody !== undefined && rbody.hasOwnProperty('users')) {
-      const tableRows = rbody.users.map(user => (
-        <TableRow key={user.id}>
-          <TableCell>{user.id}</TableCell>
-          <TableCell>{user.username}</TableCell>
-          <TableCell>{user.firstname}</TableCell>
-          <TableCell>{user.lastname}</TableCell>
-          <TableCell>{user.email}</TableCell>
-          <TableCell>{user.admin ? 'yes' : 'no'}</TableCell>
-        </TableRow>
-      ));
-
-      return (
-        <>
-          <TableHead>
-            <TableRow>
-              <TableCell>Id</TableCell>
-              <TableCell>Username</TableCell>
-              <TableCell>Firstname</TableCell>
-              <TableCell>Lasstname</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Admin</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{tableRows}</TableBody>
-        </>
-      );
-    } else {
-      return <TableRow />;
-    }
+  const hasNextPage = () => {
+    let num = currentUsers.length / 6 + 1;
+    return page < num;
   };
 
-  let tableData = [];
-  tableData.push(<TableCell>ID</TableCell>);
-  tableData.push(<TableCell>Username</TableCell>);
-  tableData.push(<TableCell>Fullname</TableCell>);
-  tableData.push(<TableCell>Admin</TableCell>);
+  const gotoPage = page => {
+    const pathname = history.location.pathname;
+    history.push({
+      pathname,
+      search: `?page=${page}`
+    });
+    setPage(page);
+  };
 
-  //getUsers(tableData);
+  const gotoNextPage = () => {
+    gotoPage(page + 1);
+  };
+
+  const gotoPrevPage = () => {
+    gotoPage(page - 1);
+  };
 
   return (
     <>
       <Typography align="center" variant="h5" gutterBottom>
-        List Users
+        Users
       </Typography>
-      <Button
-        type="button"
-        onClick={() => getUsers(tableData)}
-        inProgress={inProgress}
-      >
-        Load
-      </Button>
-      {inProgress && <LinearProgress />}
-      <Paper className={classes.root}>
-        <Table className={classes.table}>{makeTable()}</Table>
-      </Paper>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Id</TableCell>
+            <TableCell>Username</TableCell>
+            <TableCell>Firstname</TableCell>
+            <TableCell>Lasstname</TableCell>
+            <TableCell>Email</TableCell>
+            <TableCell>Admin</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {currentUsers.map(u => (
+            <TableRow key={u.id}>
+              <TableCell>{u.id}</TableCell>
+              <TableCell>{u.username}</TableCell>
+              <TableCell>{u.firstname}</TableCell>
+              <TableCell>{u.lastname}</TableCell>
+              <TableCell>{u.email}</TableCell>
+              <TableCell>{u.admin ? 'yes' : 'no'}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <IconButton
+              className={styles.navClass}
+              onClick={() => gotoPrevPage()}
+              disabled={!hasPrevPage}
+            >
+              <KeyboardArrowLeft fontSize="large" />
+            </IconButton>
+            <IconButton
+              className={styles.navClass}
+              onClick={() => gotoNextPage()}
+              disabled={!hasNextPage}
+            >
+              <KeyboardArrowRight fontSize="large" />
+            </IconButton>
+          </TableRow>
+        </TableFooter>
+      </Table>
     </>
   );
 };
 
-export default withStyles(styles)(UsersTab);
+export default withStyles(styles)(RequireAuthentication(UsersTab));

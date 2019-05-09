@@ -15,6 +15,9 @@ import ProfileTab from './tabs/profile';
 import UsersTab from './tabs/listusers';
 import EditProfileTab from './tabs/editprofile';
 import ListQuestionsTab from './tabs/surveys';
+import QuestionTab from './tabs/question';
+import NewQuestionTab from './tabs/newquestion';
+import EditQuestionTab from './tabs/editquestion';
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -51,8 +54,10 @@ const App = () => {
       return { authenticated: false };
     }
   });
+  let [currentQuestion, updateQuestion] = useState(null);
   let [isDark, switchThemeFunc] = useState(false);
   let [currentQuestions, updateQuestions] = useState([]);
+  let [currentUsers, updateUsers] = useState([]);
   return (
     <MuiThemeProvider theme={isDark ? darkTheme : defaultTheme}>
       <Router>
@@ -112,7 +117,12 @@ const App = () => {
             label="List Users"
             hideIf={!currentUser.admin}
             render={() => (
-              <UsersTab label="List Users" currentUser={currentUser} />
+              <UsersTab
+                label="List Users"
+                currentUser={currentUser}
+                currentUsers={currentUsers}
+                updateUsers={updateUsers}
+              />
             )}
           />
           <Route
@@ -126,6 +136,39 @@ const App = () => {
                 currentQuestions={currentQuestions}
                 updateQuestions={updateQuestions}
               />
+            )}
+          />
+          <Route
+            exact
+            path="/question/new"
+            label="New Question"
+            hideIf={true}
+            render={() => (
+              <NewQuestionTab
+                currentUser={currentUser}
+                updateQuestions={updateQuestions}
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/question/edit/:id"
+            label="Edit Question"
+            hideIf={true}
+            render={() => (
+              <EditQuestionTab
+                label="Edit Question"
+                currentUser={currentUser}
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/question/:id"
+            label="Question"
+            hideIf={true}
+            render={() => (
+              <QuestionTab currentUser={currentUser} url="question/" />
             )}
           />
         </TabChooser>

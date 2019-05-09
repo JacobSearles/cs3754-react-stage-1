@@ -16,6 +16,11 @@ import RequireAuthentication from '../ui/RequireAuthentication';
 import { Link as RRLink } from 'react-router-dom';
 import { makeAPICall } from '../api';
 import WhereToVoteIcon from '@material-ui/icons/WhereToVote';
+import Fab from '@material-ui/core/Fab';
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 // fetch user list, using the ?page= query param in URL
 const ListQuestionsTab = ({
@@ -26,8 +31,8 @@ const ListQuestionsTab = ({
   updateQuestions,
   currentQuestions
 }) => {
-  const [updateMessage] = useState(null);
-  const [setInProgress] = useState(false);
+  const [message, updateMessage] = useState(null);
+  const [inProgress, setInProgress] = useState(false);
   let [page, setPage] = useState(() => {
     const query = qsParse(location.search.substring(1));
     return Number(query.page) || 0;
@@ -44,6 +49,7 @@ const ListQuestionsTab = ({
       let body = await res.json();
       setInProgress(false);
       updateMessage(body.message);
+      console.log(location);
       if (res.status === 200) {
         updateQuestions(body.list);
       } else {
@@ -57,10 +63,10 @@ const ListQuestionsTab = ({
     return page !== 0;
   };
 
-  /*const hasNextPage = () => {
+  const hasNextPage = () => {
     let num = currentQuestions.length / 6 + 1;
     return page < num;
-  };*/
+  };
 
   const gotoPage = page => {
     const pathname = history.location.pathname;
@@ -77,6 +83,19 @@ const ListQuestionsTab = ({
 
   const gotoPrevPage = () => {
     gotoPage(page - 1);
+  };
+
+  const isAdmin = Boolean(Number(currentUser.admin));
+
+  const deleteQuestion = async id => {
+    alert(id);
+    let res = await makeAPICall('DELETE', `/api/question/${id}`);
+    let body = await res.json();
+    alert(res.status);
+    if (res.status === 200) {
+      window.location.href = `${process.env.PUBLIC_URL}/`;
+      window.location.href = `${process.env.PUBLIC_URL}/question?page=${page}`;
+    }
   };
 
   return (
@@ -103,6 +122,25 @@ const ListQuestionsTab = ({
                 <TableRow>{q.question}</TableRow>
                 <TableRow>{q.description}</TableRow>
               </TableCell>
+              {isAdmin ? (
+                <TableCell>
+                  <IconButton
+                    aria-label="Delete"
+                    onClick={() => deleteQuestion(q.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton
+                    component={RRLink}
+                    to={`/question/edit/${q.id}`}
+                    aria-label="Delete"
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </TableCell>
+              ) : (
+                <TableCell />
+              )}
             </TableRow>
           ))}
         </TableBody>
@@ -117,10 +155,24 @@ const ListQuestionsTab = ({
           <IconButton
             className={styles.navClass}
             onClick={() => gotoNextPage()}
-            disabled={!hasPrevPage}
+            disabled={!hasNextPage}
           >
             <KeyboardArrowRight fontSize="large" />
           </IconButton>
+          <TableCell>
+            {isAdmin ? (
+              <Tooltip title={'Add new question'}>
+                <Fab
+                  color="primary"
+                  aria-label="Add Question"
+                  component={RRLink}
+                  to={`/question/new`}
+                >
+                  <AddIcon />
+                </Fab>
+              </Tooltip>
+            ) : null}
+          </TableCell>
         </TableFooter>
       </Table>
     </>
